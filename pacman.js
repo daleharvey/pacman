@@ -1197,13 +1197,21 @@ var PACMAN = (function () {
         map.draw(ctx);
         dialog("Loading ...");
 
+        var audio = document.createElement('audio');
+        var canPlayOGG = !!(audio.canPlayType('audio/ogg').replace(/no/, ''));
+        var canPlayMP3 = !!(audio.canPlayType('audio/mpeg').replace(/no/, ''));
+        if (!canPlayOGG || !canPlayMP3) {
+          // hammer time.
+        }
+        var extension = canPlayOGG ? 'ogg' : 'mp3';
+
         var audio_files = [
-            ["start", root + "audio/opening_song.ogg"],
-            ["die", root + "audio/die.ogg"],
-            ["eatghost", root + "audio/eatghost.ogg"],
-            ["eatpill", root + "audio/eatpill.ogg"],
-            ["eating", root + "audio/eating.short.ogg"],
-            ["eating2", root + "audio/eating.short.ogg"]
+            ["start", root + "audio/opening_song." + extension],
+            ["die", root + "audio/die." + extension],
+            ["eatghost", root + "audio/eatghost." + extension],
+            ["eatpill", root + "audio/eatpill." + extension],
+            ["eating", root + "audio/eating.short." + extension],
+            ["eating2", root + "audio/eating.short." + extension]
         ];
 
         load(audio_files);
