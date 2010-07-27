@@ -38,11 +38,10 @@
   Code on <a href="http://arandomurl.com/">Github</a>
 
   <div id="pacman"></div>
-
-  <!-- <script src="pacman_util.js"></script> -->
   <script src="pacman.js"></script>
 
   <script>
+
     var el = document.getElementById("pacman");
 
     function supports_canvas() {
@@ -53,7 +52,14 @@
       return ('localStorage' in window) && window['localStorage'] !== null;
     };
 
-    if (supports_canvas() && supports_local_storage()) {
+    function supports_audio() { 
+      var myAudio = document.createElement('audio');
+      var canPlayOGG = !!(myAudio.canPlayType('audio/ogg').replace(/no/, ''));
+      var canPlayMP3 = !!(myAudio.canPlayType('audio/mpeg').replace(/no/, ''));
+      return canPlayOgg || canPlayMP3;
+    };
+
+    if (supports_canvas() && supports_local_storage() && supports_audio()) {
       window.setTimeout(function () { PACMAN.init(el, "./"); }, 0);
     } else { 
       el.innerHTML = "Sorry, needs a decent browser<br /><small>" + 

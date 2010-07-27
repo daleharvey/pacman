@@ -1197,9 +1197,10 @@ var PACMAN = (function () {
         map.draw(ctx);
         dialog("Loading ...");
 
-        var audio = document.createElement('audio');
-        var canPlayOGG = !!(audio.canPlayType('audio/ogg').replace(/no/, ''));
-        var canPlayMP3 = !!(audio.canPlayType('audio/mpeg').replace(/no/, ''));
+        var myAudio = document.createElement('audio');
+        var canPlayOGG = !!(myAudio.canPlayType('audio/ogg').replace(/no/, ''));
+        var canPlayMP3 = !!(myAudio.canPlayType('audio/mpeg').replace(/no/, ''));
+
         if (!canPlayOGG || !canPlayMP3) {
           // hammer time.
         }
