@@ -39,27 +39,14 @@
 
   <div id="pacman"></div>
   <script src="pacman.js"></script>
+  <script src="modernizr-1.5.min.js"></script>
 
   <script>
 
     var el = document.getElementById("pacman");
 
-    function supports_canvas() {
-      return !!document.createElement('canvas').getContext;
-    };
-
-    function supports_local_storage() {
-      return ('localStorage' in window) && window['localStorage'] !== null;
-    };
-
-    function supports_audio() { 
-      var myAudio = document.createElement('audio');
-      var canPlayOGG = !!(myAudio.canPlayType('audio/ogg').replace(/no/, ''));
-      var canPlayMP3 = !!(myAudio.canPlayType('audio/mpeg').replace(/no/, ''));
-      return canPlayOgg || canPlayMP3;
-    };
-
-    if (supports_canvas() && supports_local_storage() && supports_audio()) {
+    if (Modernizr.canvas && Modernizr.localstorage && 
+        Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
       window.setTimeout(function () { PACMAN.init(el, "./"); }, 0);
     } else { 
       el.innerHTML = "Sorry, needs a decent browser<br /><small>" + 
