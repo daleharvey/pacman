@@ -1254,16 +1254,13 @@ Pacman.WALLS = [
 ];
 
 Object.prototype.clone = function () {
-    var i, newObj = (this instanceof Array) ? [] : {};
-    for (i in this) {
-        if (i === 'clone') {
-            continue;
-        }
-        if (this[i] && typeof this[i] === "object") {
-            newObj[i] = this[i].clone();
-        } else {
-            newObj[i] = this[i];
-        }
-    }
-    return newObj;
+  const newObj = this instanceof Array? [] : {};
+  var i, v;
+
+  for (i in this)  if (i !== 'clone')
+    v = this[i], newObj[i] = v && typeof v === 'object'? v.clone() : v;
+
+  return newObj;
 };
+
+Object.defineProperty(Object.prototype, 'clone', { enumerable: false });
