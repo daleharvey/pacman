@@ -587,7 +587,7 @@ Pacman.Map = function (size) {
     }
     
     function reset() {       
-        map    = Pacman.MAP.clone();
+        map    = cloneObj(Pacman.MAP);
         height = map.length;
         width  = map[0].length;        
     };
@@ -1253,17 +1253,18 @@ Pacman.WALLS = [
      {"line": [10.5, 9.5]}]
 ];
 
-Object.prototype.clone = function () {
-    var i, newObj = (this instanceof Array) ? [] : {};
-    for (i in this) {
+function cloneObj(obj) {
+    var i, newObj = (obj instanceof Array) ? [] : {};
+    for (var i in obj) {
         if (i === 'clone') {
             continue;
         }
-        if (this[i] && typeof this[i] === "object") {
-            newObj[i] = this[i].clone();
+        if (obj[i] && typeof obj[i] === "object") {
+            newObj[i] = cloneObj(obj[i]);
         } else {
-            newObj[i] = this[i];
+            newObj[i] = obj[i];
         }
     }
     return newObj;
 };
+
