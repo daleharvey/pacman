@@ -1261,7 +1261,7 @@ function clone(obj) {
             continue;
         }
         if (obj[i] && typeof obj[i] === "object") {
-            newObj[i] = obj[i].clone();
+            newObj[i] = clone(obj[i]);
         } else {
             newObj[i] = obj[i];
         }
