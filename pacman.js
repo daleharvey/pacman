@@ -294,7 +294,9 @@ Pacman.User = function (game, map) {
 
     function setCharacter(username) {
       characterImage = new Image();
-      characterImage.src = 'img/corgi.png';
+      if (username === undefined || username === null) {
+        characterImage.src = 'img/robbie-robot.png';
+      }
     }
 
     function addScore(nScore) {
@@ -325,7 +327,7 @@ Pacman.User = function (game, map) {
     function newLevel() {
         resetPosition();
         eaten = 0;
-        setCharacter('kaitlin');
+        setCharacter();
     };
 
     function resetPosition() {
@@ -787,7 +789,15 @@ var PACMAN = (function () {
         timer        = null,
         map          = null,
         user         = null,
-        stored       = null;
+        stored       = null,
+        characterImage = null;
+
+    function setCharacter(username) {
+      characterImage = new Image();
+      if (!username) {
+        characterImage.src = "img/robbie-robot.png";
+      }
+    }
 
     function getTick() {
         return tick;
@@ -830,6 +840,7 @@ var PACMAN = (function () {
         map.reset();
         map.draw(ctx);
         startLevel();
+        setCharacter();
     }
 
     function keyDown(e) {
@@ -882,10 +893,8 @@ var PACMAN = (function () {
 
         ctx.fillStyle = "#FFFF00";
 
-        base_image = new Image();
-        base_image.src = 'img/corgi.png';
         for (var i = 0, len = user.getLives(); i < len; i++) {
-            ctx.drawImage(base_image, 150 + (25 * (i-1)) + map.blockSize / 2, (topLeft+1) - map.blockSize / 2);
+            ctx.drawImage(characterImage, 150 + (25 * (i-1)) + map.blockSize / 2, (topLeft+1) - map.blockSize / 2);
         }
 
         ctx.fillStyle = !soundDisabled() ? "#00FF00" : "#FF0000";
@@ -924,7 +933,7 @@ var PACMAN = (function () {
         for (i = 0, len = ghosts.length; i < len; i += 1) {
             ghosts[i].draw(ctx);
         }
-        user.draw(ctx, );
+        user.draw(ctx);
 
         userPos = u["new"];
 

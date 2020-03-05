@@ -1,0 +1,26 @@
+
+label{
+    display: inline-block;
+    float: left;
+    clear: left;
+    text-align: right;
+}
+input {
+  display: inline-block;
+  float: left;
+}
+
+.user-form {
+  text-align: center;
+  align: center;
+}
+
+.submit-btn {
+  height: 25px;
+  font-family: 'BDCartoonShoutRegular';
+  src: url('/BD_Cartoon_Shout-webfont.ttf')  format('truetype');
+  color: #FFFF00;
+  background-color: #0000FF;
+	border-color: #000000;
+  border-radius: 25px;
+}

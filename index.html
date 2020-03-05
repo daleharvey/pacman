@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>HTML5 Pacman</title>
 
+    <link rel="stylesheet" href="css/index.css">
     <style type="text/css">
       @font-face {
 	    font-family: 'BDCartoonShoutRegular';
@@ -34,6 +35,13 @@
 
   <h1>Hack-man</h1>
 
+  <table class='user-form' action='profile.js'>
+    <tbody>
+      <tr><td><label for="username">Username:</label></td><td colspan='2'><input type="text" id="username" name="username"></td></tr>
+      <tr><td><label for="profile">Profile:</label></td><td colspan='2'><input type="file" id="profile" name="profile" accept="image/*"></td></tr>
+      <tr><td></td><td><input class='submit-btn' type="submit"></td><td></td></tr>
+    </tbody>
+  </table>
   <div id="pacman"></div>
   <script src="pacman.js"></script>
   <script src="modernizr-1.5.min.js"></script>
