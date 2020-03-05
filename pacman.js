@@ -279,6 +279,8 @@ Pacman.Ghost = function (game, map, colour) {
 Pacman.User = function (game, map) {
     
     var position  = null,
+        prevPosition = null,
+        characterImage = null,
         direction = null,
         eaten     = null,
         due       = null, 
@@ -291,7 +293,12 @@ Pacman.User = function (game, map) {
     keyMap[KEY.ARROW_RIGHT] = RIGHT;
     keyMap[KEY.ARROW_DOWN]  = DOWN;
 
-    function addScore(nScore) { 
+    function setCharacter(username) {
+      characterImage = new Image();
+      characterImage.src = 'img/corgi.png';
+    }
+
+    function addScore(nScore) {
         score += nScore;
         if (score >= 10000 && score - nScore < 10000) { 
             lives += 1;
@@ -323,6 +330,7 @@ Pacman.User = function (game, map) {
     
     function resetPosition() {
         position = {"x": 90, "y": 120};
+        prevPosition = {"x": 90, "y": 120};
         direction = LEFT;
         due = LEFT;
     };
@@ -496,19 +504,11 @@ Pacman.User = function (game, map) {
         var s     = map.blockSize, 
             angle = calcAngle(direction, position);
 
-        ctx.fillStyle = "#FFFF00";
+        ctx.fillRect(prevPosition.x/10 * s, prevPosition.y/10 * s, 25,25);
+        ctx.drawImage(characterImage, position.x/10 * s, position.y/10 * s, 25, 25);
 
-        ctx.beginPath();        
-
-        ctx.moveTo(((position.x/10) * s) + s / 2,
-                   ((position.y/10) * s) + s / 2);
-        
-        ctx.arc(((position.x/10) * s) + s / 2,
-                ((position.y/10) * s) + s / 2,
-                s / 2, Math.PI * angle.start, 
-                Math.PI * angle.end, angle.direction); 
-        
-        ctx.fill();    
+        prevPosition.x = position.x;
+        prevPosition.y = position.y;
     };
     
     initUser();
@@ -882,16 +882,10 @@ var PACMAN = (function () {
         
         ctx.fillStyle = "#FFFF00";
 
+        base_image = new Image();
+        base_image.src = 'img/corgi.png';
         for (var i = 0, len = user.getLives(); i < len; i++) {
-            ctx.fillStyle = "#FFFF00";
-            ctx.beginPath();
-            ctx.moveTo(150 + (25 * i) + map.blockSize / 2,
-                       (topLeft+1) + map.blockSize / 2);
-            
-            ctx.arc(150 + (25 * i) + map.blockSize / 2,
-                    (topLeft+1) + map.blockSize / 2,
-                    map.blockSize / 2, Math.PI * 0.25, Math.PI * 1.75, false);
-            ctx.fill();
+            ctx.drawImage(base_image, 150 + (25 * (i-1)) + map.blockSize / 2, (topLeft+1) - map.blockSize / 2);
         }
 
         ctx.fillStyle = !soundDisabled() ? "#00FF00" : "#FF0000";
