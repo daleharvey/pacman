@@ -8,7 +8,7 @@
  * do proper ghost mechanics (blinky/wimpy etc)
  */
 
-var NONE        = 4,
+let NONE        = 4,
     UP          = 3,
     LEFT        = 2,
     DOWN        = 1,
@@ -25,7 +25,7 @@ Pacman.FPS = 30;
 
 Pacman.Ghost = function (game, map, colour) {
 
-    var position  = null,
+    let position  = null,
         direction = null,
         eatable   = null,
         eaten     = null,
@@ -33,7 +33,7 @@ Pacman.Ghost = function (game, map, colour) {
     
     function getNewCoord(dir, current) { 
         
-        var speed  = isVunerable() ? 1 : isHidden() ? 4 : 2,
+        let speed  = isVunerable() ? 1 : isHidden() ? 4 : 2,
             xSpeed = (dir === LEFT && -speed || dir === RIGHT && speed || 0),
             ySpeed = (dir === DOWN && speed || dir === UP && -speed || 0);
     
@@ -47,7 +47,7 @@ Pacman.Ghost = function (game, map, colour) {
      * exact block, make sure they dont skip over it 
      */
     function addBounded(x1, x2) { 
-        var rem    = x1 % 10, 
+        let rem    = x1 % 10, 
             result = rem + x2;
         if (rem !== 0 && result > 10) {
             return x1 + (10 - rem);
@@ -70,7 +70,7 @@ Pacman.Ghost = function (game, map, colour) {
     };
     
     function getRandomDirection() {
-        var moves = (direction === LEFT || direction === RIGHT) 
+        let moves = (direction === LEFT || direction === RIGHT) 
             ? [UP, DOWN] : [LEFT, RIGHT];
         return moves[Math.floor(Math.random() * 2)];
     };
@@ -108,7 +108,7 @@ Pacman.Ghost = function (game, map, colour) {
     };
 
     function nextSquare(x, dir) {
-        var rem = x % 10;
+        let rem = x % 10;
         if (rem === 0) { 
             return x; 
         } else if (dir === RIGHT || dir === DOWN) { 
@@ -141,7 +141,7 @@ Pacman.Ghost = function (game, map, colour) {
 
     function draw(ctx) {
   
-        var s    = map.blockSize, 
+        let s    = map.blockSize, 
             top  = (position.y/10) * s,
             left = (position.x/10) * s;
     
@@ -153,12 +153,12 @@ Pacman.Ghost = function (game, map, colour) {
             eaten = null;
         }
         
-        var tl = left + s;
-        var base = top + s - 3;
-        var inc = s / 10;
+        let tl = left + s;
+        let base = top + s - 3;
+        let inc = s / 10;
 
-        var high = game.getTick() % 10 > 5 ? 3  : -3;
-        var low  = game.getTick() % 10 > 5 ? -3 : 3;
+        let high = game.getTick() % 10 > 5 ? 3  : -3;
+        let low  = game.getTick() % 10 > 5 ? -3 : 3;
 
         ctx.fillStyle = getColour();
         ctx.beginPath();
@@ -185,8 +185,8 @@ Pacman.Ghost = function (game, map, colour) {
         ctx.closePath();
         ctx.fill();
 
-        var f = s / 12;
-        var off = {};
+        let f = s / 12;
+        let off = {};
         off[RIGHT] = [f, 0];
         off[LEFT]  = [-f, 0];
         off[UP]    = [0, -f];
@@ -218,7 +218,7 @@ Pacman.Ghost = function (game, map, colour) {
     
     function move(ctx) {
         
-        var oldPos = position,
+        let oldPos = position,
             onGrid = onGridSquare(position),
             npos   = null;
         
@@ -252,7 +252,7 @@ Pacman.Ghost = function (game, map, colour) {
 
         position = npos;        
         
-        var tmp = pane(position);
+        let tmp = pane(position);
         if (tmp) { 
             position = tmp;
         }
@@ -278,7 +278,7 @@ Pacman.Ghost = function (game, map, colour) {
 
 Pacman.User = function (game, map) {
     
-    var position  = null,
+    let position  = null,
         direction = null,
         eaten     = null,
         due       = null, 
@@ -358,7 +358,7 @@ Pacman.User = function (game, map) {
     };
     
     function nextSquare(x, dir) {
-        var rem = x % 10;
+        let rem = x % 10;
         if (rem === 0) { 
             return x; 
         } else if (dir === RIGHT || dir === DOWN) { 
@@ -388,7 +388,7 @@ Pacman.User = function (game, map) {
 
     function move(ctx) {
         
-        var npos        = null, 
+        let npos        = null, 
             nextWhole   = null, 
             oldPosition = position,
             block       = null;
@@ -453,7 +453,7 @@ Pacman.User = function (game, map) {
     };
 
     function isMidSquare(x) { 
-        var rem = x % 10;
+        let rem = x % 10;
         return rem > 3 || rem < 7;
     };
 
@@ -472,7 +472,7 @@ Pacman.User = function (game, map) {
 
     function drawDead(ctx, amount) { 
 
-        var size = map.blockSize, 
+        let size = map.blockSize, 
             half = size / 2;
 
         if (amount >= 1) { 
@@ -493,7 +493,7 @@ Pacman.User = function (game, map) {
 
     function draw(ctx) { 
 
-        var s     = map.blockSize, 
+        let s     = map.blockSize, 
             angle = calcAngle(direction, position);
 
         ctx.fillStyle = "#FFFF00";
@@ -531,7 +531,7 @@ Pacman.User = function (game, map) {
 
 Pacman.Map = function (size) {
     
-    var height    = null, 
+    let height    = null, 
         width     = null, 
         blockSize = size,
         pillSize  = 0,
@@ -549,7 +549,7 @@ Pacman.Map = function (size) {
         if (!withinBounds(pos.y, pos.x)) {
             return false;
         }
-        var peice = map[pos.y][pos.x];
+        let peice = map[pos.y][pos.x];
         return peice === Pacman.EMPTY || 
             peice === Pacman.BISCUIT ||
             peice === Pacman.PILL;
@@ -557,7 +557,7 @@ Pacman.Map = function (size) {
     
     function drawWall(ctx) {
 
-        var i, j, p, line;
+        let i, j, p, line;
         
         ctx.strokeStyle = "#0000FF";
         ctx.lineWidth   = 5;
@@ -630,7 +630,7 @@ Pacman.Map = function (size) {
     
     function draw(ctx) {
         
-        var i, j, size = blockSize;
+        let i, j, size = blockSize;
 
         ctx.fillStyle = "#000";
 	    ctx.fillRect(0, 0, width * size, height * size);
@@ -646,7 +646,7 @@ Pacman.Map = function (size) {
     
     function drawBlock(y, x, ctx) {
 
-        var layout = map[y][x];
+        let layout = map[y][x];
 
         if (layout === Pacman.PILL) {
             return;
@@ -690,14 +690,14 @@ Pacman.Map = function (size) {
 
 Pacman.Audio = function(game) {
     
-    var files          = [], 
+    let files          = [], 
         endEvents      = [],
         progressEvents = [],
         playing        = [];
     
     function load(name, path, cb) { 
 
-        var f = files[name] = document.createElement("audio");
+        let f = files[name] = document.createElement("audio");
 
         progressEvents[name] = function(event) { progress(event, name, cb); };
         
@@ -717,7 +717,7 @@ Pacman.Audio = function(game) {
     };
 
     function disableSound() {
-        for (var i = 0; i < playing.length; i++) {
+        for (let i = 0; i < playing.length; i++) {
             files[playing[i]].pause();
             files[playing[i]].currentTime = 0;
         }
@@ -726,7 +726,7 @@ Pacman.Audio = function(game) {
 
     function ended(name) { 
 
-        var i, tmp = [], found = false;
+        let i, tmp = [], found = false;
 
         files[name].removeEventListener("ended", endEvents[name], true);
 
@@ -750,13 +750,13 @@ Pacman.Audio = function(game) {
     };
 
     function pause() { 
-        for (var i = 0; i < playing.length; i++) {
+        for (let i = 0; i < playing.length; i++) {
             files[playing[i]].pause();
         }
     };
     
     function resume() { 
-        for (var i = 0; i < playing.length; i++) {
+        for (let i = 0; i < playing.length; i++) {
             files[playing[i]].play();
         }        
     };
@@ -770,9 +770,9 @@ Pacman.Audio = function(game) {
     };
 };
 
-var PACMAN = (function () {
+let PACMAN = (function () {
 
-    var state        = WAITING,
+    let state        = WAITING,
         audio        = null,
         ghosts       = [],
         ghostSpecs   = ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847"],
@@ -804,7 +804,7 @@ var PACMAN = (function () {
     function dialog(text) {
         ctx.fillStyle = "#FFFF00";
         ctx.font      = "14px BDCartoonShoutRegular";
-        var width = ctx.measureText(text).width,
+        let width = ctx.measureText(text).width,
             x     = ((map.width * map.blockSize) - width) / 2;        
         ctx.fillText(text, x, (map.height * 10) + 8);
     }
@@ -815,7 +815,7 @@ var PACMAN = (function () {
     
     function startLevel() {        
         user.resetPosition();
-        for (var i = 0; i < ghosts.length; i += 1) { 
+        for (let i = 0; i < ghosts.length; i += 1) { 
             ghosts[i].reset();
         }
         audio.play("start");
@@ -874,7 +874,7 @@ var PACMAN = (function () {
 
     function drawFooter() {
         
-        var topLeft  = (map.height * map.blockSize),
+        let topLeft  = (map.height * map.blockSize),
             textBase = topLeft + 17;
         
         ctx.fillStyle = "#000000";
@@ -882,7 +882,7 @@ var PACMAN = (function () {
         
         ctx.fillStyle = "#FFFF00";
 
-        for (var i = 0, len = user.getLives(); i < len; i++) {
+        for (let i = 0, len = user.getLives(); i < len; i++) {
             ctx.fillStyle = "#FFFF00";
             ctx.beginPath();
             ctx.moveTo(150 + (25 * i) + map.blockSize / 2,
@@ -912,7 +912,7 @@ var PACMAN = (function () {
 
     function mainDraw() { 
 
-        var diff, u, i, len, nScore;
+        let diff, u, i, len, nScore;
         
         ghostPos = [];
 
@@ -955,7 +955,7 @@ var PACMAN = (function () {
 
     function mainLoop() {
 
-        var diff;
+        let diff;
 
         if (state !== PAUSE) { 
             ++tick;
@@ -1029,7 +1029,7 @@ var PACMAN = (function () {
     
     function init(wrapper, root) {
         
-        var i, len, ghost,
+        let i, len, ghost,
             blockSize = wrapper.offsetWidth / 19,
             canvas    = document.createElement("canvas");
         
@@ -1055,9 +1055,9 @@ var PACMAN = (function () {
         map.draw(ctx);
         dialog("Loading ...");
 
-        var extension = Modernizr.audio.ogg ? 'ogg' : 'mp3';
+        let extension = Modernizr.audio.ogg ? 'ogg' : 'mp3';
 
-        var audio_files = [
+        let audio_files = [
             ["start", root + "audio/opening_song." + extension],
             ["die", root + "audio/die." + extension],
             ["eatghost", root + "audio/eatghost." + extension],
@@ -1074,7 +1074,7 @@ var PACMAN = (function () {
         if (arr.length === 0) { 
             callback();
         } else { 
-            var x = arr.pop();
+            let x = arr.pop();
             audio.load(x[0], x[1], function() { load(arr, callback); });
         }
     };
@@ -1096,11 +1096,11 @@ var PACMAN = (function () {
 }());
 
 /* Human readable keyCode index */
-var KEY = {'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 16, 'CTRL': 17, 'ALT': 18, 'PAUSE': 19, 'CAPS_LOCK': 20, 'ESCAPE': 27, 'SPACEBAR': 32, 'PAGE_UP': 33, 'PAGE_DOWN': 34, 'END': 35, 'HOME': 36, 'ARROW_LEFT': 37, 'ARROW_UP': 38, 'ARROW_RIGHT': 39, 'ARROW_DOWN': 40, 'PRINT_SCREEN': 44, 'INSERT': 45, 'DELETE': 46, 'SEMICOLON': 59, 'WINDOWS_LEFT': 91, 'WINDOWS_RIGHT': 92, 'SELECT': 93, 'NUM_PAD_ASTERISK': 106, 'NUM_PAD_PLUS_SIGN': 107, 'NUM_PAD_HYPHEN-MINUS': 109, 'NUM_PAD_FULL_STOP': 110, 'NUM_PAD_SOLIDUS': 111, 'NUM_LOCK': 144, 'SCROLL_LOCK': 145, 'SEMICOLON': 186, 'EQUALS_SIGN': 187, 'COMMA': 188, 'HYPHEN-MINUS': 189, 'FULL_STOP': 190, 'SOLIDUS': 191, 'GRAVE_ACCENT': 192, 'LEFT_SQUARE_BRACKET': 219, 'REVERSE_SOLIDUS': 220, 'RIGHT_SQUARE_BRACKET': 221, 'APOSTROPHE': 222};
+let KEY = {'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 16, 'CTRL': 17, 'ALT': 18, 'PAUSE': 19, 'CAPS_LOCK': 20, 'ESCAPE': 27, 'SPACEBAR': 32, 'PAGE_UP': 33, 'PAGE_DOWN': 34, 'END': 35, 'HOME': 36, 'ARROW_LEFT': 37, 'ARROW_UP': 38, 'ARROW_RIGHT': 39, 'ARROW_DOWN': 40, 'PRINT_SCREEN': 44, 'INSERT': 45, 'DELETE': 46, 'SEMICOLON': 59, 'WINDOWS_LEFT': 91, 'WINDOWS_RIGHT': 92, 'SELECT': 93, 'NUM_PAD_ASTERISK': 106, 'NUM_PAD_PLUS_SIGN': 107, 'NUM_PAD_HYPHEN-MINUS': 109, 'NUM_PAD_FULL_STOP': 110, 'NUM_PAD_SOLIDUS': 111, 'NUM_LOCK': 144, 'SCROLL_LOCK': 145, 'SEMICOLON': 186, 'EQUALS_SIGN': 187, 'COMMA': 188, 'HYPHEN-MINUS': 189, 'FULL_STOP': 190, 'SOLIDUS': 191, 'GRAVE_ACCENT': 192, 'LEFT_SQUARE_BRACKET': 219, 'REVERSE_SOLIDUS': 220, 'RIGHT_SQUARE_BRACKET': 221, 'APOSTROPHE': 222};
 
 (function () {
 	/* 0 - 9 */
-	for (var i = 48; i <= 57; i++) {
+	for (let i = 48; i <= 57; i++) {
         KEY['' + (i - 48)] = i;
 	}
 	/* A - Z */
@@ -1254,7 +1254,7 @@ Pacman.WALLS = [
 ];
 
 Object.prototype.clone = function () {
-    var i, newObj = (this instanceof Array) ? [] : {};
+    let i, newObj = (this instanceof Array) ? [] : {};
     for (i in this) {
         if (i === 'clone') {
             continue;
