@@ -24,6 +24,35 @@
       h1 { font-family: BDCartoonShoutRegular; text-align:center; }
       body { width:342px; margin:0px auto; font-family:sans-serif; }
       a { text-decoration:none; }
+
+      .popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    text-align: center;
+}
+
+.close-button {
+    background-color: #ff0000;
+    color: #fff;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    background-color: #cc0000;
+}
+
+      
     </style>
 
 </head>
@@ -34,10 +63,19 @@
 
   <h1>HTML5 Pacman</h1>
 
-  <a href="http://arandomurl.com/">Writeup</a> |
+  <!-- <a href="http://arandomurl.com/">Writeup</a> |
   Code on <a href="http://arandomurl.com/">Github</a>
-
+  <div id="app"></div> -->
   <div id="pacman"></div>
+
+  <div id="popup" class="popup">
+    <h3 id="question">Question: How many points do you want to gain?</h3>
+    <button id="R1" onclick="selectResponse(10)">10 Points</button>
+    <button id="R2" onclick="selectResponse(20)">20 Points</button>
+    <button id="R3" onclick="selectResponse(30)">30 Points</button>
+    <button class="close-button" onclick="closePopup()">Validate</button>
+</div>
+  <script src="question.js"></script>
   <script src="pacman.js"></script>
   <script src="modernizr-1.5.min.js"></script>
 

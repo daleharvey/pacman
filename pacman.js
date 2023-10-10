@@ -6,7 +6,8 @@
  * add fruits + levels
  * fix what happens when a ghost is eaten (should go back to base)
  * do proper ghost mechanics (blinky/wimpy etc)
- */
+*/
+
 
 var NONE        = 4,
     UP          = 3,
@@ -342,6 +343,7 @@ Pacman.User = function (game, map) {
         return true;
 	};
 
+
     function getNewCoord(dir, current) {   
         return {
             "x": current.x + (dir === LEFT && -2 || dir === RIGHT && 2 || 0),
@@ -434,14 +436,14 @@ Pacman.User = function (game, map) {
             block === Pacman.BISCUIT || block === Pacman.PILL) {
             
             map.setBlock(nextWhole, Pacman.EMPTY);           
-            addScore((block === Pacman.BISCUIT) ? 10 : 50);
-            eaten += 1;
+            addScore((block === Pacman.BISCUIT) ? 0 : 50);
             
-            if (eaten === 182) {
+            if (eaten === 4) {
                 game.completedLevel();
             }
             
-            if (block === Pacman.PILL) { 
+            if (block === Pacman.PILL) {
+                eaten += 1;
                 game.eatenPill();
             }
         }   
@@ -787,7 +789,9 @@ var PACMAN = (function () {
         timer        = null,
         map          = null,
         user         = null,
-        stored       = null;
+        stored       = null,
+        questions    = JSON.parse(JSON.stringify(jsonData)),
+        questionsRestante = 12;
 
     function getTick() { 
         return tick;
@@ -830,6 +834,7 @@ var PACMAN = (function () {
         map.reset();
         map.draw(ctx);
         startLevel();
+
     }
 
     function keyDown(e) {
@@ -842,6 +847,7 @@ var PACMAN = (function () {
             audio.resume();
             map.draw(ctx);
             setState(stored);
+            restartPause ();
         } else if (e.keyCode === KEY.P) {
             stored = state;
             setState(PAUSE);
@@ -854,6 +860,15 @@ var PACMAN = (function () {
         return true;
     }    
 
+    function restartPause () {
+        for (var i = 0; i < ghosts.length; i += 1) { 
+            ghosts[i].reset();
+        }
+        audio.play("start");
+        timerStart = tick;
+        setState(COUNTDOWN);
+    }
+
     function loseLife() {        
         setState(WAITING);
         user.loseLife();
@@ -863,6 +878,7 @@ var PACMAN = (function () {
     }
 
     function setState(nState) { 
+        console.log(nState)
         state = nState;
         stateChanged = true;
     };
@@ -1007,6 +1023,12 @@ var PACMAN = (function () {
         audio.play("eatpill");
         timerStart = tick;
         eatenCount = 0;
+        console.log("miam")
+        const randomQuestionNumber = Math.floor(Math.random() * questionsRestante);
+
+        openPopup(randomQuestionNumber,  questions);
+        questions.splice(randomQuestionNumber);
+        console.log(questions.length)
         for (i = 0; i < ghosts.length; i += 1) {
             ghosts[i].makeEatable(ctx);
         }        
@@ -1125,28 +1147,28 @@ Pacman.PILL    = 4;
 
 Pacman.MAP = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-	[0, 4, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 4, 0],
-	[0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
-	[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-	[0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
-	[0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-	[0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
-	[2, 2, 2, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 2, 2, 2],
-	[0, 0, 0, 0, 1, 0, 1, 0, 0, 3, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-	[2, 2, 2, 2, 1, 1, 1, 0, 3, 3, 3, 0, 1, 1, 1, 2, 2, 2, 2],
-	[0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-	[2, 2, 2, 0, 1, 0, 1, 1, 1, 2, 1, 1, 1, 0, 1, 0, 2, 2, 2],
-	[0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-	[0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-	[0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
-	[0, 4, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 4, 0],
-	[0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0],
-	[0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-	[0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
-	[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-];
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 4, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 4, 0],
+    [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
+    [0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
+    [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1],
+    [0, 0, 0, 0, 1, 0, 1, 0, 0, 3, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 0, 3, 3, 3, 0, 1, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+    [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1],
+    [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+    [0, 4, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 4, 0],
+    [0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0],
+    [0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+]
 
 Pacman.WALLS = [
     
@@ -1267,3 +1289,53 @@ Object.prototype.clone = function () {
     }
     return newObj;
 };
+
+
+const pe = new KeyboardEvent('keydown', {
+    key: 'p',
+    code: 'KeyP',
+    keyCode: 80,
+    which: 80,
+    charCode: 0,
+    shiftKey: false,
+    ctrlKey: false,
+    altKey: false,
+    metaKey: false,
+    bubbles: true,
+    cancelable: true,
+  });
+
+function openPopup(index, questions) {
+    const popup = document.getElementById("popup");
+    const question = document.getElementById("question")
+    const R1 = document.getElementById("R1")
+    const R2 = document.getElementById("R2")
+    const R3 = document.getElementById("R3")
+
+    question.textContent = questions["question"]
+    
+    console.log("popup affiche")
+    document.dispatchEvent(pe);
+    popup.style.display = "block";
+}
+
+// Function to close the popup
+function closePopup() {
+    const popup = document.getElementById("popup");
+    
+    document.dispatchEvent(pe);
+
+    popup.style.display = "none";
+}
+
+// Function to handle response selection
+function selectResponse(points) {
+    // You can perform any action here with the selected points value
+    console.log(`Selected ${points} points.`);
+    closePopup();
+}
+
+// Simulate opening the popup when Pac-Man eats a pill
+function simulatePillEating() {
+    openPopup();
+}
