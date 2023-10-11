@@ -289,25 +289,29 @@ Pacman.Ghost = function (game, map, colour) {
 };
 
 Pacman.User = function (game, map) {
-  var position = null,
-    direction = null,
-    eaten = null,
-    due = null,
-    lives = null,
-    score = 5,
-    keyMap = {};
 
-  keyMap[KEY.ARROW_LEFT] = LEFT;
-  keyMap[KEY.ARROW_UP] = UP;
-  keyMap[KEY.ARROW_RIGHT] = RIGHT;
-  keyMap[KEY.ARROW_DOWN] = DOWN;
+    
+    let position  = null,
+        direction = null,
+        eaten     = null,
+        due       = null, 
+        lives     = null,
+        score     = 0,
+        keyMap    = {};
+    
+    keyMap[KEY.ARROW_LEFT]  = LEFT;
+    keyMap[KEY.ARROW_UP]    = UP;
+    keyMap[KEY.ARROW_RIGHT] = RIGHT;
+    keyMap[KEY.ARROW_DOWN]  = DOWN;
 
-  function addScore(nScore) {
-    score += nScore;
-    if (score >= 10000 && score - nScore < 10000) {
-      lives += 1;
-    }
-  }
+    function addScore(nScore) { 
+        console.log("coucou depuis addscore")
+        score += nScore;
+        if (score >= 10000 && score - nScore < 10000) { 
+            lives += 1;
+        }
+    };
+  
 
   function theScore() {
     return score;
@@ -1081,10 +1085,27 @@ var PACMAN = (function () {
     }
   }
 
-  function endGame(score) {
-    console.log("vous avez gagné");
-    openPopupEnd();
-  }
+	function eatenPill() {
+	audio.play("eatpill");
+	timerStart = tick;
+	eatenCount = 0;
+	// console.log("miam")
+	const randomQuestionNumber = Math.floor(Math.random() * questionsRestante);
+
+	openPopup(randomQuestionNumber,  questions);
+
+	for (i = 0; i < ghosts.length; i += 1) {
+		ghosts[i].makeEatable(ctx);
+	}        
+};
+    
+    function completedLevel() {
+        setState(WAITING);
+        level += 1;
+        map.reset();
+        user.newLevel();
+        startLevel();
+    };
 
   function keyPress(e) {
     if (state !== WAITING && state !== PAUSE) {
@@ -1157,14 +1178,17 @@ var PACMAN = (function () {
 
     document.addEventListener("keydown", keyDown, true);
     document.addEventListener("keypress", keyPress, true);
-
-    timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
   }
-
-  return {
-    init: init,
-  };
-})();
+        
+    
+    return {
+        "init" : init,
+        "questions" : questions,
+        "questionsRestante": questionsRestante,
+        "user" : user
+    };
+    
+}());
 
 /* Human readable keyCode index */
 var KEY = {
@@ -1500,16 +1524,24 @@ const pe = new KeyboardEvent("keydown", {
   cancelable: true,
 });
 
-function openPopup(index, questions) {
-  const popup = document.getElementById("popup");
-  const question = document.getElementById("question");
-  const R1 = document.getElementById("R1");
-  const R2 = document.getElementById("R2");
-  const R3 = document.getElementById("R3");
+function openPopup(index) {
+    const popup = document.getElementById("popup");
+    const question = document.getElementById("question");
+    const R1 = document.getElementById("R1");
+    const R2 = document.getElementById("R2");
+    const R3 = document.getElementById("R3");
 
-  console.log("popup affiche");
-  document.dispatchEvent(pe);
-  popup.style.display = "block";
+
+    question.textContent = PACMAN.questions[index].question;
+    R1.textContent =  PACMAN.questions[index].answers[0];
+    R1.setAttribute("key", index);
+    R2.textContent = PACMAN.questions[index].answers[1];
+    R2.setAttribute("key", index);
+    R3.textContent = PACMAN.questions[index].answers[2];
+    R3.setAttribute("key", index);
+    
+    document.dispatchEvent(pe);
+    popup.style.display = "block";
 }
 
 // Function to close the popup
@@ -1522,10 +1554,21 @@ function closePopup() {
 }
 
 // Function to handle response selection
-function selectResponse(points) {
-  // You can perform any action here with the selected points value
-  console.log(`Selected ${points} points.`);
-  closePopup();
+function selectResponse(button) {
+    const id = button.getAttribute('key')
+//    console.log(PACMAN.questionsRestante);
+//     console.log(id);
+//     console.log("pacmanquestion " + PACMAN.questions[id].answers);
+   if(button.textContent === PACMAN.questions[id].correctAnswer){
+    window.alert("Bonne réponse");
+   }else {
+    window.alert("Faux");
+   }
+
+   PACMAN.questions.splice(id, 1);
+    PACMAN.questionsRestante --;
+    closePopup();
+    
 }
 
 // Simulate opening the popup when Pac-Man eats a pill
