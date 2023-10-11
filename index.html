@@ -70,10 +70,11 @@
 
   <div id="popup" class="popup">
     <h3 id="question">Question: How many points do you want to gain?</h3>
-    <button id="R1" onclick="selectResponse(10)">10 Points</button>
-    <button id="R2" onclick="selectResponse(20)">20 Points</button>
-    <button id="R3" onclick="selectResponse(30)">30 Points</button>
-    <button class="close-button" onclick="closePopup()">Validate</button>
+    <
+    <button  id="R1" onclick="selectResponse(this)">10 Points</button>
+    <button  id="R2" onclick="selectResponse(this)">20 Points</button>
+    <button  id="R3" onclick="selectResponse(this)">30 Points</button>
+    <!-- <button class="close-button" onclick="closePopup()">Validate</button> -->
 </div>
   <script src="question.js"></script>
   <script src="pacman.js"></script>
@@ -86,6 +87,7 @@
     if (Modernizr.canvas && Modernizr.localstorage && 
         Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
       window.setTimeout(function () { PACMAN.init(el, "./"); }, 0);
+
     } else { 
       el.innerHTML = "Sorry, needs a decent browser<br /><small>" + 
         "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
