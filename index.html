@@ -6,24 +6,112 @@
     
     <style type="text/css">
       @font-face {
-	    font-family: 'BDCartoonShoutRegular';
+        font-family: 'BDCartoonShoutRegular';
         src: url('BD_Cartoon_Shout-webfont.ttf') format('truetype');
-	    font-weight: normal;
-	    font-style: normal;
+        font-weight: normal;
+        font-style: normal;
       }
+
       #pacman {
         height:450px;
         width:342px;
         margin:20px auto;
       }
+
       #shim { 
         font-family: BDCartoonShoutRegular; 
         position:absolute;
         visibility:hidden
       }
-      h1 { font-family: BDCartoonShoutRegular; text-align:center; }
-      body { width:342px; margin:0px auto; font-family:sans-serif; }
-      a { text-decoration:none; }
+
+      h1 { 
+        font-family: BDCartoonShoutRegular; text-align:center; 
+      }
+
+      body { 
+        width:342px; margin:0px auto; font-family:sans-serif; 
+      }
+
+      a { 
+        text-decoration:none; 
+      }
+
+      .popup, .popupEnd {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #d9d9d9;
+        padding: 30px;
+        z-index: 9999;
+        border-radius: 20px;
+      }
+
+      .popup {
+        text-align: left;
+      }
+
+      .popupEnd {
+        text-align: center;
+      }
+
+      #question {
+        width: 90%;
+        text-align: left;
+        color: #ef626c;
+      }
+
+      .popup button, .popupEnd button {
+        border-radius: 10px;
+        border: 1px solid #ef626c;
+        padding: 10px 20px;
+        background-color: #ef626c;
+        color: white;
+      }
+
+      .popup button {
+        display: block;
+        margin-bottom: 25px;
+        width: 100%;
+        text-align: left;
+      }
+
+      .popupEnd p {
+        width: 100%;
+        text-align: center;
+      }
+
+      .popupEnd button:hover, .popup button:hover {
+        transition: 0.2s;
+        border: 1px solid #ef626c;
+        background-color: #d9d9d9;
+        color: #ef626c;
+      }
+
+      #points {
+        color: #ef626c;
+        font-size: 20px;
+      }
+
+      hr {
+        border: 1px solid #ef626c;
+      }
+
+      .close-button {
+          background-color: #ff0000;
+          color: #fff;
+          margin-top: 10px;
+          padding: 5px 10px;
+          border: none;
+          cursor: pointer;
+      }
+
+      .close-button:hover {
+          background-color: #cc0000;
+      }
+
+      
     </style>
 
 </head>
@@ -34,10 +122,30 @@
 
   <h1>HTML5 Pacman</h1>
 
-  <a href="http://arandomurl.com/">Writeup</a> |
+  <!-- <a href="http://arandomurl.com/">Writeup</a> |
   Code on <a href="http://arandomurl.com/">Github</a>
-
+  <div id="app"></div> -->
   <div id="pacman"></div>
+
+  <div id="popup" class="popup">
+    <h3 id="question">Question: How many points do you want to gain?</h3>
+    <hr>
+    <br>
+    <button id="R1" onclick="selectResponse(10)">10 Points</button>
+    <button id="R2" onclick="selectResponse(20)">20 Points</button>
+    <button id="R3" onclick="selectResponse(30)">30 Points</button>
+
+</div>
+
+<div id="popupEnd" class="popupEnd">
+  <p id="points">Vos points : 600</p>
+  <hr>
+  <br>
+  <button onclick="popupButtonReplay()">Rejouer</button>
+  <button onclick="popupButtonBack()">Accueil</button>
+</div>
+
+  <script src="question.js"></script>
   <script src="pacman.js"></script>
   <script src="modernizr-1.5.min.js"></script>
 
@@ -48,6 +156,7 @@
     if (Modernizr.canvas && Modernizr.localstorage && 
         Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
       window.setTimeout(function () { PACMAN.init(el, "./"); }, 0);
+
     } else { 
       el.innerHTML = "Sorry, needs a decent browser<br /><small>" + 
         "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
